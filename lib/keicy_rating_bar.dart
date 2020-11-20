@@ -141,7 +141,11 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
 
     final Widget star = widget.isReadOnly
         ? Row(
-            children: [ratingWidget, SizedBox(width: widget.spacing)],
+            children: [
+              SizedBox(width: widget.spacing / 2),
+              ratingWidget,
+              SizedBox(width: widget.spacing / 2),
+            ],
           )
         : kIsWeb
             ? MouseRegion(
@@ -221,7 +225,11 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                     });
                   },
                   child: Row(
-                    children: [ratingWidget, SizedBox(width: widget.spacing)],
+                    children: [
+                      SizedBox(width: widget.spacing / 2),
+                      ratingWidget,
+                      SizedBox(width: widget.spacing / 2),
+                    ],
                   ),
                 ),
               )
@@ -229,7 +237,7 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                 onTapDown: (detail) {
                   RenderBox box = context.findRenderObject();
                   var _pos = box.globalToLocal(detail.globalPosition);
-                  var i = ((_pos.dx - widget.spacing) / widget.size);
+                  var i = ((_pos.dx) / (widget.size + widget.spacing));
 
                   var newRating = widget.allowHalfRating ? i : i.round().toDouble();
                   if (newRating > widget.starCount) {
@@ -250,7 +258,7 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                 onHorizontalDragUpdate: (dragDetails) {
                   RenderBox box = context.findRenderObject();
                   var _pos = box.globalToLocal(dragDetails.globalPosition);
-                  var i = _pos.dx / widget.size;
+                  var i = ((_pos.dx) / (widget.size + widget.spacing));
                   var newRating = widget.allowHalfRating ? i : i.round().toDouble();
                   if (newRating > widget.starCount) {
                     newRating = widget.starCount.toDouble();
@@ -270,7 +278,11 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                   });
                 },
                 child: Row(
-                  children: [ratingWidget, SizedBox(width: widget.spacing)],
+                  children: [
+                    SizedBox(width: widget.spacing / 2),
+                    ratingWidget,
+                    SizedBox(width: widget.spacing / 2),
+                  ],
                 ),
               );
 
