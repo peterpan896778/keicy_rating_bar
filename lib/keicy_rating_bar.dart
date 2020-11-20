@@ -116,9 +116,10 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
         Material(
           color: Colors.transparent,
           child: Wrap(
-              alignment: WrapAlignment.start,
-              spacing: widget.spacing,
-              children: List.generate(widget.starCount, (index) => buildStar(context, index))),
+            alignment: WrapAlignment.start,
+            spacing: 0,
+            children: List.generate(widget.starCount, (index) => buildStar(context, index)),
+          ),
         ),
         (widget.bottomLabel == "") ? SizedBox() : SizedBox(height: widget.bottomLabelSpacing),
         (widget.bottomLabel == "")
@@ -139,7 +140,9 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
     }
 
     final Widget star = widget.isReadOnly
-        ? ratingWidget
+        ? Row(
+            children: [ratingWidget, SizedBox(width: widget.spacing)],
+          )
         : kIsWeb
             ? MouseRegion(
                 onExit: (event) {
@@ -217,7 +220,9 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                       }
                     });
                   },
-                  child: ratingWidget,
+                  child: Row(
+                    children: [ratingWidget, SizedBox(width: widget.spacing)],
+                  ),
                 ),
               )
             : GestureDetector(
@@ -225,6 +230,7 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                   RenderBox box = context.findRenderObject();
                   var _pos = box.globalToLocal(detail.globalPosition);
                   var i = ((_pos.dx - widget.spacing) / widget.size);
+
                   var newRating = widget.allowHalfRating ? i : i.round().toDouble();
                   if (newRating > widget.starCount) {
                     newRating = widget.starCount.toDouble();
@@ -263,7 +269,9 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                     }
                   });
                 },
-                child: ratingWidget,
+                child: Row(
+                  children: [ratingWidget, SizedBox(width: widget.spacing)],
+                ),
               );
 
     return star;
