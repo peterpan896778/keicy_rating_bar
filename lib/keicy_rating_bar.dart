@@ -27,6 +27,7 @@ class KeicyRatingBar extends StatefulWidget {
   final double bottomLabelFontSize;
   final Color bottomLabelColor;
   final double bottomLabelSpacing;
+  final double halfStarThreshold;
 
   KeicyRatingBar({
     this.starCount = 5,
@@ -48,6 +49,7 @@ class KeicyRatingBar extends StatefulWidget {
     this.bottomLabelFontSize = 30,
     this.bottomLabelColor = Colors.black,
     this.bottomLabelSpacing = 10,
+    this.halfStarThreshold = 0.53,
   }) {
     assert(this.rating != null);
     if (defaultIconData != null)
@@ -82,8 +84,6 @@ class KeicyRatingBar extends StatefulWidget {
 }
 
 class _KeicyRatingBarState extends State<KeicyRatingBar> {
-  final double halfStarThreshold = 0.53; //half star value starts from this number
-
   //tracks for user tapping on this widget
   bool isWidgetTapped = false;
   double currentRating;
@@ -132,7 +132,7 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
     Widget ratingWidget;
     if (index >= currentRating) {
       ratingWidget = widget.defaultIconData;
-    } else if (index > currentRating - (widget.allowHalfRating ? halfStarThreshold : 1.0) && index < currentRating) {
+    } else if (index > currentRating - (widget.allowHalfRating ? widget.halfStarThreshold : 1.0) && index < currentRating) {
       ratingWidget = widget.halfFilledIconData;
     } else {
       ratingWidget = widget.filledIconData;
@@ -273,7 +273,7 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
     var k = newRating - newRating.floor();
     if (k != 0) {
       //half stars
-      if (k >= halfStarThreshold) {
+      if (k >= widget.halfStarThreshold) {
         newRating = newRating.floor() + 1.0;
       } else {
         newRating = newRating.floor() + 0.5;
