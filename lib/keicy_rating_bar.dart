@@ -86,13 +86,12 @@ class KeicyRatingBar extends StatefulWidget {
 class _KeicyRatingBarState extends State<KeicyRatingBar> {
   //tracks for user tapping on this widget
   bool isWidgetTapped = false;
+  double oldRating;
   double currentRating;
   double savedRating;
   Timer debounceTimer;
   @override
   void initState() {
-    currentRating = widget.rating;
-    savedRating = widget.rating;
     super.initState();
   }
 
@@ -105,13 +104,17 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
 
   @override
   Widget build(BuildContext context) {
+    if (oldRating != widget.rating) {
+      currentRating = widget.rating;
+      savedRating = widget.rating;
+      oldRating = widget.rating;
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        (widget.topLabel == "")
-            ? SizedBox()
-            : Text(widget.topLabel, style: TextStyle(fontSize: widget.topLabelFontSize, color: widget.topLabelColor)),
+        (widget.topLabel == "") ? SizedBox() : Text(widget.topLabel, style: TextStyle(fontSize: widget.topLabelFontSize, color: widget.topLabelColor)),
         (widget.topLabel == "") ? SizedBox() : SizedBox(height: widget.topLabelSpacing),
         Material(
           color: Colors.transparent,
@@ -122,9 +125,7 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
           ),
         ),
         (widget.bottomLabel == "") ? SizedBox() : SizedBox(height: widget.bottomLabelSpacing),
-        (widget.bottomLabel == "")
-            ? SizedBox()
-            : Text(widget.bottomLabel, style: TextStyle(fontSize: widget.bottomLabelFontSize, color: widget.bottomLabelColor)),
+        (widget.bottomLabel == "") ? SizedBox() : Text(widget.bottomLabel, style: TextStyle(fontSize: widget.bottomLabelFontSize, color: widget.bottomLabelColor)),
       ],
     );
   }
