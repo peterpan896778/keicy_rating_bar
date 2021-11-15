@@ -8,26 +8,26 @@ import 'package:flutter/material.dart';
 typedef void RatingChangeCallback(double rating);
 
 class KeicyRatingBar extends StatefulWidget {
-  final int starCount;
-  final double rating;
-  final RatingChangeCallback onRated;
-  final bool allowHalfRating;
-  final double size;
-  final Color starColor;
-  Widget filledIconData;
-  Widget halfFilledIconData;
-  Widget defaultIconData; //this is needed only when having fullRatedIconData && halfRatedIconData
-  final double spacing;
-  final bool isReadOnly;
-  final String topLabel;
-  final double topLabelFontSize;
-  final Color topLabelColor;
-  final double topLabelSpacing;
-  final String bottomLabel;
-  final double bottomLabelFontSize;
-  final Color bottomLabelColor;
-  final double bottomLabelSpacing;
-  final double halfStarThreshold;
+  final int? starCount;
+  final double? rating;
+  final RatingChangeCallback? onRated;
+  final bool? allowHalfRating;
+  final double? size;
+  final Color? starColor;
+  Widget? filledIconData;
+  Widget? halfFilledIconData;
+  Widget? defaultIconData; //this is needed only when having fullRatedIconData && halfRatedIconData
+  final double? spacing;
+  final bool? isReadOnly;
+  final String? topLabel;
+  final double? topLabelFontSize;
+  final Color? topLabelColor;
+  final double? topLabelSpacing;
+  final String? bottomLabel;
+  final double? bottomLabelFontSize;
+  final Color? bottomLabelColor;
+  final double? bottomLabelSpacing;
+  final double? halfStarThreshold;
 
   KeicyRatingBar({
     this.starCount = 5,
@@ -86,10 +86,10 @@ class KeicyRatingBar extends StatefulWidget {
 class _KeicyRatingBarState extends State<KeicyRatingBar> {
   //tracks for user tapping on this widget
   bool isWidgetTapped = false;
-  double oldRating;
-  double currentRating;
-  double savedRating;
-  Timer debounceTimer;
+  double? oldRating;
+  double? currentRating;
+  double? savedRating;
+  Timer? debounceTimer;
   @override
   void initState() {
     super.initState();
@@ -114,38 +114,42 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        (widget.topLabel == "") ? SizedBox() : Text(widget.topLabel, style: TextStyle(fontSize: widget.topLabelFontSize, color: widget.topLabelColor)),
+        (widget.topLabel == "")
+            ? SizedBox()
+            : Text("${widget.topLabel}", style: TextStyle(fontSize: widget.topLabelFontSize, color: widget.topLabelColor)),
         (widget.topLabel == "") ? SizedBox() : SizedBox(height: widget.topLabelSpacing),
         Material(
           color: Colors.transparent,
           child: Wrap(
             alignment: WrapAlignment.start,
             spacing: 0,
-            children: List.generate(widget.starCount, (index) => buildStar(context, index)),
+            children: List.generate(widget.starCount!, (index) => buildStar(context, index)),
           ),
         ),
         (widget.bottomLabel == "") ? SizedBox() : SizedBox(height: widget.bottomLabelSpacing),
-        (widget.bottomLabel == "") ? SizedBox() : Text(widget.bottomLabel, style: TextStyle(fontSize: widget.bottomLabelFontSize, color: widget.bottomLabelColor)),
+        (widget.bottomLabel == "")
+            ? SizedBox()
+            : Text(widget.bottomLabel!, style: TextStyle(fontSize: widget.bottomLabelFontSize, color: widget.bottomLabelColor)),
       ],
     );
   }
 
   Widget buildStar(BuildContext context, int index) {
     Widget ratingWidget;
-    if (index >= currentRating) {
-      ratingWidget = widget.defaultIconData;
-    } else if (index > currentRating - (widget.allowHalfRating ? widget.halfStarThreshold : 1.0) && index < currentRating) {
-      ratingWidget = widget.halfFilledIconData;
+    if (index >= currentRating!) {
+      ratingWidget = widget.defaultIconData!;
+    } else if (index > currentRating! - (widget.allowHalfRating! ? widget.halfStarThreshold! : 1.0) && index < currentRating!) {
+      ratingWidget = widget.halfFilledIconData!;
     } else {
-      ratingWidget = widget.filledIconData;
+      ratingWidget = widget.filledIconData!;
     }
 
-    final Widget star = widget.isReadOnly
+    final Widget star = widget.isReadOnly!
         ? Row(
             children: [
-              SizedBox(width: widget.spacing / 2),
+              SizedBox(width: widget.spacing! / 2),
               ratingWidget,
-              SizedBox(width: widget.spacing / 2),
+              SizedBox(width: widget.spacing! / 2),
             ],
           )
         : kIsWeb
@@ -165,12 +169,12 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                   });
                 },
                 onHover: (event) {
-                  RenderBox box = context.findRenderObject();
+                  RenderBox box = context.findRenderObject() as RenderBox;
                   var _pos = box.globalToLocal(event.position);
-                  var i = _pos.dx / widget.size;
-                  var newRating = widget.allowHalfRating ? i : i.round().toDouble();
-                  if (newRating > widget.starCount) {
-                    newRating = widget.starCount.toDouble();
+                  var i = _pos.dx / widget.size!;
+                  var newRating = widget.allowHalfRating! ? i : i.round().toDouble();
+                  if (newRating > widget.starCount!) {
+                    newRating = widget.starCount!.toDouble();
                   }
                   if (newRating < 0) {
                     newRating = 0.0;
@@ -183,12 +187,12 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                   onTapDown: (detail) {
                     isWidgetTapped = true;
 
-                    RenderBox box = context.findRenderObject();
+                    RenderBox box = context.findRenderObject() as RenderBox;
                     var _pos = box.globalToLocal(detail.globalPosition);
-                    var i = ((_pos.dx - widget.spacing) / widget.size);
-                    var newRating = widget.allowHalfRating ? i : i.round().toDouble();
-                    if (newRating > widget.starCount) {
-                      newRating = widget.starCount.toDouble();
+                    var i = ((_pos.dx - widget.spacing!) / widget.size!);
+                    var newRating = widget.allowHalfRating! ? i : i.round().toDouble();
+                    if (newRating > widget.starCount!) {
+                      newRating = widget.starCount!.toDouble();
                     }
                     if (newRating < 0) {
                       newRating = 0.0;
@@ -198,18 +202,18 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                       savedRating = newRating;
                     });
                     if (widget.onRated != null) {
-                      widget.onRated(normalizeRating(currentRating));
+                      widget.onRated!(normalizeRating(currentRating!));
                     }
                   },
                   onHorizontalDragUpdate: (dragDetails) {
                     isWidgetTapped = true;
 
-                    RenderBox box = context.findRenderObject();
+                    RenderBox box = context.findRenderObject() as RenderBox;
                     var _pos = box.globalToLocal(dragDetails.globalPosition);
-                    var i = _pos.dx / widget.size;
-                    var newRating = widget.allowHalfRating ? i : i.round().toDouble();
-                    if (newRating > widget.starCount) {
-                      newRating = widget.starCount.toDouble();
+                    var i = _pos.dx / widget.size!;
+                    var newRating = widget.allowHalfRating! ? i : i.round().toDouble();
+                    if (newRating > widget.starCount!) {
+                      newRating = widget.starCount!.toDouble();
                     }
                     if (newRating < 0) {
                       newRating = 0.0;
@@ -221,28 +225,28 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                     debounceTimer = Timer(Duration(milliseconds: 100), () {
                       if (widget.onRated != null) {
                         currentRating = normalizeRating(newRating);
-                        widget.onRated(currentRating);
+                        widget.onRated!(currentRating!);
                       }
                     });
                   },
                   child: Row(
                     children: [
-                      SizedBox(width: widget.spacing / 2),
+                      SizedBox(width: widget.spacing! / 2),
                       ratingWidget,
-                      SizedBox(width: widget.spacing / 2),
+                      SizedBox(width: widget.spacing! / 2),
                     ],
                   ),
                 ),
               )
             : GestureDetector(
                 onTapDown: (detail) {
-                  RenderBox box = context.findRenderObject();
+                  RenderBox box = context.findRenderObject() as RenderBox;
                   var _pos = box.globalToLocal(detail.globalPosition);
-                  var i = ((_pos.dx) / (widget.size + widget.spacing));
+                  var i = ((_pos.dx) / (widget.size! + widget.spacing!));
 
-                  var newRating = widget.allowHalfRating ? i : i.round().toDouble();
-                  if (newRating > widget.starCount) {
-                    newRating = widget.starCount.toDouble();
+                  var newRating = widget.allowHalfRating! ? i : i.round().toDouble();
+                  if (newRating > widget.starCount!) {
+                    newRating = widget.starCount!.toDouble();
                   }
                   if (newRating < 0) {
                     newRating = 0.0;
@@ -254,15 +258,15 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                   });
                 },
                 onTapUp: (e) {
-                  if (widget.onRated != null) widget.onRated(currentRating);
+                  if (widget.onRated != null) widget.onRated!(currentRating!);
                 },
                 onHorizontalDragUpdate: (dragDetails) {
-                  RenderBox box = context.findRenderObject();
+                  RenderBox box = context.findRenderObject() as RenderBox;
                   var _pos = box.globalToLocal(dragDetails.globalPosition);
-                  var i = ((_pos.dx) / (widget.size + widget.spacing));
-                  var newRating = widget.allowHalfRating ? i : i.round().toDouble();
-                  if (newRating > widget.starCount) {
-                    newRating = widget.starCount.toDouble();
+                  var i = ((_pos.dx) / (widget.size! + widget.spacing!));
+                  var newRating = widget.allowHalfRating! ? i : i.round().toDouble();
+                  if (newRating > widget.starCount!) {
+                    newRating = widget.starCount!.toDouble();
                   }
                   if (newRating < 0) {
                     newRating = 0.0;
@@ -274,15 +278,15 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
                   debounceTimer = Timer(Duration(milliseconds: 100), () {
                     if (widget.onRated != null) {
                       currentRating = normalizeRating(newRating);
-                      widget.onRated(currentRating);
+                      widget.onRated!(currentRating!);
                     }
                   });
                 },
                 child: Row(
                   children: [
-                    SizedBox(width: widget.spacing / 2),
+                    SizedBox(width: widget.spacing! / 2),
                     ratingWidget,
-                    SizedBox(width: widget.spacing / 2),
+                    SizedBox(width: widget.spacing! / 2),
                   ],
                 ),
               );
@@ -294,7 +298,7 @@ class _KeicyRatingBarState extends State<KeicyRatingBar> {
     var k = newRating - newRating.floor();
     if (k != 0) {
       //half stars
-      if (k >= widget.halfStarThreshold) {
+      if (k >= widget.halfStarThreshold!) {
         newRating = newRating.floor() + 1.0;
       } else {
         newRating = newRating.floor() + 0.5;
